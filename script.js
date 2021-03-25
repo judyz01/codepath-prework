@@ -1,6 +1,7 @@
 // global constants
 const cluePauseTime = 333; //how long to pause in between clues
 const nextClueWaitTime = 1000; //how long to wait before starting playback of the clue sequence
+const totalCountdown = 10; // how much time is given per turn for player
 
 
 //Global Variables
@@ -12,6 +13,29 @@ var volume = 0.5;  //must be between 0.0 and 1.0
 var guessCounter = 0;
 var clueHoldTime = 1000; //how long to hold each clue's light/sound
 var mistakes = 0;
+var myTimer;
+var count = totalCountdown;
+
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+// timer implementation
+function clock() {
+   myTimer = setInterval(myClock, 1000);
+
+   function myClock() {
+     if (count == 0) {
+       loseGame();
+     }
+     document.getElementById("demo").innerHTML = --count;
+   }
+ }
+
 
 function startGame(){
     //initialize game variables
@@ -33,6 +57,10 @@ function stopGame(){
     // hide Stop button and reveal Start button
     document.getElementById("stopBtn").classList.add("hidden");
     document.getElementById("startBtn").classList.remove("hidden");
+    clearInterval(myTimer);
+    
+    // reset timer
+    count = totalCountdown + 1;
 }
 
 // Sound Synthesis Functions
@@ -147,8 +175,10 @@ function guess(btn) {
       } else {
         // correct pattern but there's more turns
         // increment progress and play next clue sequence
+        // reset timer for next turn
         progress++;
         playClueSequence();
+        count = totalCountdown + 1;
       }
       
     } else {
@@ -185,3 +215,6 @@ function randomPattern() {
   // return entire array as part of our pattern
   return arr;
 }
+
+
+

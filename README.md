@@ -28,9 +28,9 @@ The following **optional** features are implemented:
 * [x] Playback speeds up on each turn
 * [x] Computer picks a different pattern each time the game is played
 * [x] Player only loses after 3 mistakes (instead of on the first mistake)
-* [ ] Game button appearance change goes beyond color (e.g. add an image)
+* [x] Game button appearance change goes beyond color (e.g. add an image)
 * [ ] Game button sound is more complex than a single tone (e.g. an audio file, a chord, a sequence of multiple tones)
-* [ ] User has a limited amount of time to enter their guess on each turn
+* [x] User has a limited amount of time to enter their guess on each turn
 
 The following **additional** features are implemented:
 
@@ -39,14 +39,16 @@ The following **additional** features are implemented:
 ## Video Walkthrough
 
 Here's a video walkthrough of the game:
-![](https://cdn.glitch.com/c543ad00-fc54-48f0-b6f8-66ba204c87a8%2FCodePath%20SITE%20Prework.gif?v=1616486903257)
+![](https://cdn.glitch.com/c543ad00-fc54-48f0-b6f8-66ba204c87a8%2Fezgif.com-gif-maker.gif?v=1616652641791)
 
 
 ## Reflection Questions
 1. If you used any outside resources to help complete your submission (websites, books, people, etc) list them here. 
 
     - [AudioContext not playing bug fix](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio)
-    - [Math.random() Refresher](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
+    - [Math.random() refresher](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)
+    - [Timer implementation](https://stackoverflow.com/questions/40638402/javascript-countdown-timer-with-start-stop-buttons)
+    - [CSS Background image/size property](https://www.w3schools.com/cssref/css3_pr_background-size.asp)
 
 2. What was a challenge you encountered in creating this submission (be specific)? How did you overcome it? (recommended 200 - 400 words) 
     
