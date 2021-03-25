@@ -20,13 +20,16 @@
       Welcome to the game! Repeat back the pattern by pressing buttons.
     </p>
     
-    <button id="startBtn" onclick="startGame()">
+    <button id="startBtn" onclick="startGame(); clock();">
       Start
     </button>
     
     <button id="stopBtn" class="hidden" onclick="stopGame()"> 
       Stop
     </button>
+    
+    <p id="time"> Time Remaining: </p>
+    <p id="demo"> </p>
     
     <div id="gameButtonArea">
       <button id="button1" onmousedown="startTone(1)" onmouseup="stopTone()" onclick="guess(1)"></button>
