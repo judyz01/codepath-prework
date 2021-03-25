@@ -1,22 +1,23 @@
 // global constants
-const clueHoldTime = 1000; //how long to hold each clue's light/sound
 const cluePauseTime = 333; //how long to pause in between clues
 const nextClueWaitTime = 1000; //how long to wait before starting playback of the clue sequence
 
 
 //Global Variables
-var pattern = [2,4,6];
-//[2, 5, 4, 3, 5, 1, 2, 6]
+var pattern = randomPattern();
 var progress = 0; 
 var gamePlaying = false;
 var tonePlaying = false;
 var volume = 0.5;  //must be between 0.0 and 1.0
 var guessCounter = 0;
+var clueHoldTime = 1000; //how long to hold each clue's light/sound
+var mistakes = 0;
 
 function startGame(){
     //initialize game variables
     progress = 0;
     gamePlaying = true;
+    mistakes = 0;
   
     // hide Start button and reveal Stop button
     document.getElementById("startBtn").classList.add("hidden");
@@ -45,46 +46,54 @@ const freqMap = {
 }
 
 function playTone(btn,len){ 
-  o.frequency.value = freqMap[btn]
-  g.gain.setTargetAtTime(volume,context.currentTime + 0.05,0.025)
-  tonePlaying = true
+  o.frequency.value = freqMap[btn];
+  g.gain.setTargetAtTime(volume,context.currentTime + 0.05,0.025);
+  tonePlaying = true;
   setTimeout(function(){
-    stopTone()
+    stopTone();
   },len)
 }
 
 function startTone(btn){
   if(!tonePlaying){
-    o.frequency.value = freqMap[btn]
-    g.gain.setTargetAtTime(volume,context.currentTime + 0.05,0.025)
-    tonePlaying = true
+    o.frequency.value = freqMap[btn];
+    g.gain.setTargetAtTime(volume,context.currentTime + 0.05,0.025);
+    tonePlaying = true;
   }
 }
 
 function stopTone(){
-    g.gain.setTargetAtTime(0,context.currentTime + 0.05,0.025)
-    tonePlaying = false
+    g.gain.setTargetAtTime(0,context.currentTime + 0.05,0.025);
+    tonePlaying = false;
 }
 
 //Page Initialization
 // Init Sound Synthesizer
-var context = new AudioContext()
-var o = context.createOscillator()
-var g = context.createGain()
-g.connect(context.destination)
-g.gain.setValueAtTime(0,context.currentTime)
-o.connect(g)
-o.start(0)
+var context = new AudioContext();
+var o = context.createOscillator();
+var g = context.createGain();
+g.connect(context.destination);
+g.gain.setValueAtTime(0,context.currentTime);
+o.connect(g);
+o.start(0);
 
-function lightButton(btn){
-  document.getElementById("button"+btn).classList.add("lit")
+// fix for audio not playing in browser 
+document.querySelector('button').addEventListener('click', function() {
+  context.resume().then(() => {
+    console.log('Playback resumed successfully');
+  });
+});
+
+  
+function lightButton(btn) {
+  document.getElementById("button" + btn).classList.add("lit")
 }
 
 function clearButton(btn){
-  document.getElementById("button"+btn).classList.remove("lit")
+  document.getElementById("button" + btn).classList.remove("lit")
 }
 
-function playSingleClue(btn){
+function playSingleClue(btn) {
   if(gamePlaying){
     lightButton(btn);
     playTone(btn,clueHoldTime);
@@ -92,30 +101,30 @@ function playSingleClue(btn){
   }
 }
 
-function playClueSequence(){
+function playClueSequence() {
   guessCounter = 0;
   let delay = nextClueWaitTime; //set delay to initial wait time
   for(let i=0;i<=progress;i++){ // for each clue that is revealed so far
-    console.log("play single clue: " + pattern[i] + " in " + delay + "ms")
-    setTimeout(playSingleClue,delay,pattern[i]) // set a timeout to play that clue
-    delay += clueHoldTime 
+    console.log("play single clue: " + pattern[i] + " in " + delay + "ms");
+    setTimeout(playSingleClue,delay,pattern[i]); // set a timeout to play that clue
+    clueHoldTime -= 10; // speeds up clue playback
     delay += cluePauseTime;
   }
 }
 
-function loseGame(){
+function loseGame() {
   stopGame();
   alert("Game Over. You lost.");
 }
 
-function winGame(){
+function winGame() {
   stopGame();
   alert("Congrats, you won the game!");
 }
 
-function guess(btn){
+function guess(btn) {
   console.log("user guessed: " + btn);
-  if(!gamePlaying){
+  if(!gamePlaying) {
     return;
   }
   
@@ -148,7 +157,31 @@ function guess(btn){
     }
     
   } else {
-    // lose game if guess isn't correct
-    loseGame();
+    // increment number of mistakes and repeat same clue for player
+    mistakes++;
+    console.log("player made " + mistakes + " mistake(s)");
+    playClueSequence();
+    
+    // lose game if player makes 3 mistakes
+    if (mistakes == 3) {
+      loseGame();
+    }
   }
+}
+
+// computer generates random pattern for user to play
+function randomPattern() {
+  // initialize array
+  var arr = [];
+  
+  // creates random pattern of integers from 1-6 (respective to buttons) for 7 turns
+  for (var i = 0; i < 7; i++) {
+    // Math.random() generates random float from [0,1), where 1 is exclusive
+    // we add 1 to avoid having a 0 in the array, multiply by 6 to have the greatest integer of 1 + 5
+    // append to array after random int is generated
+    arr.push(Math.floor( 1 + Math.random() * 6));
+  }
+  console.log(arr);
+  // return entire array as part of our pattern
+  return arr;
 }
